@@ -12,4 +12,8 @@
         select *
         from my_board
     </select>
+
+    <update id="updateBoard" parameterType="hashmap">
+        update my_board set able = #{useable} where boardid = #{boardId}
+    </update>
 </mapper>

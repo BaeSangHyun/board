@@ -13,6 +13,13 @@
 <%--    <li class="active"><a href="${cp}/freeBoard">자유게시판</a></li>--%>
 <%--    <li class="active"><a href="${cp}/QnABoard">Q&A 게시판</a></li>--%>
     <c:forEach items="${boardList}" var="board">
-        <li class="active"><a href="${cp}/board?boardId=${board.BOARDID}">${board.BOARDNM}</a></li>
+        <c:choose>
+            <c:when test="${board.ABLE == 'T'}">
+                <li class="active"><a href="${cp}/post?boardId=${board.BOARDID}">${board.BOARDNM}</a></li>
+            </c:when>
+<%--            <c:when test="${board.ABLE == 'F'}">--%>
+<%--                <li class="active"><a href="">${board.BOARDNM}</a></li>--%>
+<%--            </c:when>--%>
+        </c:choose>
     </c:forEach>
 </ul>

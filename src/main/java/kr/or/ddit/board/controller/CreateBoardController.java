@@ -27,6 +27,8 @@ public class CreateBoardController extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         String boardNm = request.getParameter("boardNm");
         String useable = request.getParameter("useable");
         User user = (User) request.getSession().getAttribute("user");

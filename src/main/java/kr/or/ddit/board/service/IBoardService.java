@@ -7,4 +7,6 @@ public interface IBoardService {
     public int insertBoard(Map map);
 
     public List<Map> allBoard();
+
+    public int updateBoard(Map map);
 }

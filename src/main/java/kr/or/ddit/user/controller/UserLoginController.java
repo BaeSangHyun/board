@@ -30,6 +30,8 @@ public class UserLoginController extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         String userId = request.getParameter("userId");
         String pass = request.getParameter("pass");
         String rememberMe = request.getParameter("rememberMe");
@@ -47,9 +49,10 @@ public class UserLoginController extends HttpServlet {
 
             IBoardService boardService = BoardService.getInstance();
             List<Map> boarList = boardService.allBoard();
-            request.setAttribute("boardList", boarList);
-//            response.sendRedirect(request.getContextPath() + "/jsp/main.jsp");
-            request.getRequestDispatcher("/jsp/main.jsp").forward(request,response);
+//            request.setAttribute("boardList", boarList);
+            session.setAttribute("boardList", boarList);
+            response.sendRedirect(request.getContextPath() + "/jsp/main.jsp");
+//            request.getRequestDispatcher("/jsp/main.jsp").forward(request,response);
         }
     }
 

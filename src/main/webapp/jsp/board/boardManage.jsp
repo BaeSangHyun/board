@@ -16,16 +16,30 @@
 
     <%@include file="/commonJsp/basicLib.jsp"%>
 
+    <style>
+        .form-control {
+            width: 150px;
+            display: inline-block;
+            text-align: center;
+        }
+        select {
+            text-align-last: center;
+        }
+        .formDiv {
+            width: 500px;
+        }
+    </style>
+
     <script>
         $(function () {
             $('#create').on('click', function () {
-                $('#frm').submit();
-            });
-
-            $('button').on('click', '.modify', function () {
-
+                $('#createFrm').submit();
             });
         });
+
+        function submitForm(idx) {
+            $('#form'+idx).submit();
+        }
     </script>
 </head>
 
@@ -45,31 +59,33 @@
         </div>
 
         <div class="row">
-            <form action="${cp}/createBoard" method="post">
-                <input type="hidden" value="${user.userid}">
                 <div class="col-sm-8 blog-main">
-                    <div>
-                        <label for="boardNm">게시판 이름</label>
-                        <input type="text" id="boardNm" name="boardNm">
-                        <select name="useable">
-                            <option value="T" selected>사용</option>
-                            <option value="F">미사용</option>
-                        </select>
-                        <button type="button" id="create">생성</button>
-                    </div>
-                    <c:forEach items="${boardList}" var="board">
-                        <div>
+                    <form id="createFrm" action="${cp}/createBoard" method="post">
+                        <div class="formDiv">
                             <label for="boardNm">게시판 이름</label>
-                            <input type="text" name="boardNm" value="${board.BOARDNM}" readonly>
-                            <select name="useable">
+                            <input type="text" id="boardNm" name="boardNm" class="form-control">
+                            <select name="useable" class="form-control">
                                 <option value="T" selected>사용</option>
                                 <option value="F">미사용</option>
                             </select>
-                            <button type="button" class="modify">수정</button>
+                            <button type="submit" id="create" class="btn btn-primary">생성</button>
                         </div>
+                    </form>
+                    <c:forEach items="${boardList}" var="board">
+                        <form id="form${board.BOARDID}" action="${cp}/modifyBoard" method="post">
+                            <input type="hidden" id="boardId" name="boardId" value="${board.BOARDID}">
+                            <div class="formDiv">
+                                <label for="boardNm">게시판 이름</label>
+                                <input type="text" name="boardNm" value="${board.BOARDNM}" class="form-control" readonly>
+                                <select name="useable" class="form-control">
+                                    <option value="T" <c:if test="${board.ABLE == 'T'}">selected</c:if>>사용</option>
+                                    <option value="F" <c:if test="${board.ABLE == 'F'}">selected</c:if>>미사용</option>
+                                </select>
+                                <button type="button" class="modify btn btn-success" onclick="submitForm(${board.BOARDID})">수정</button>
+                            </div>
+                        </form>
                     </c:forEach>
                 </div>
-            </form>
             <!-- /.blog-main -->
         </div>	</div>
     </div>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+    <resultMap id="data" type="hashMap">
+        <result property="CONT" column="CONT" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="getAllPost" parameterType="hashmap" resultType="hashmap">
+        select a.*
+        from(select rownum rn , a.*
+            from( select postid, pa_postid, title, level, userId, reg_date
+                from post
+                where boardid = #{boardId}
+                start with pa_postid is null
+                connect by prior postid = pa_postid
+                order siblings by postgn desc, postid
+                ) a
+            ) a
+        where a.rn between #{pageSize} * (#{page} - 1) + 1 and #{page} * #{pageSize}
+    </select>
+
+    <select id="getCntPost" parameterType="int" resultType="int">
+        select count(*)
+        from post
+        where boardid = #{boardId}
+    </select>
+
+    <select id="getPost" parameterType="int" resultType="hashmap" resultMap="data">
+        select *
+        from post
+        where postid = #{postId}
+    </select>
+
+    <select id="getPostCom" parameterType="int" resultType="hashmap" resultMap="data" >
+        select *
+        from post_com
+        where postid = #{postId}
+        order by commid
+    </select>
+
+    <select id="getPostFile" parameterType="int" resultType="hashMap">
+        select *
+        from post_file
+        where postid = #{postId}
+        order by fileid
+    </select>
+
+    <insert id="regCom" parameterType="hashmap">
+        insert into post_com values
+        ( POST_COM_SEQ.NEXTVAL, #{postId}, #{userId}, sysdate, 'T', #{cont})
+    </insert>
+
+</mapper>

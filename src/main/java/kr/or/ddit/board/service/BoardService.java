@@ -36,4 +36,12 @@ public class BoardService implements IBoardService {
         session.close();
         return boardList;
     }
+
+    @Override
+    public int updateBoard(Map map) {
+        SqlSession session = MybatisUtil.getSession();
+        int cnt = dao.updateBoard(session, map);
+        session.close();
+        return cnt;
+    }
 }

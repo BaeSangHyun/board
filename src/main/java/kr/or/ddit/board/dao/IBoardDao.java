@@ -11,4 +11,6 @@ public interface IBoardDao {
 
     // 모든 게시판 출력
     public List<Map> allBoard(SqlSession session);
+
+    public int updateBoard(SqlSession session, Map map);
 }

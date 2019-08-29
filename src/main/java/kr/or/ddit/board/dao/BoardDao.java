@@ -27,4 +27,11 @@ public class BoardDao implements IBoardDao {
     public List<Map> allBoard(SqlSession session) {
         return session.selectList("board.allBoard");
     }
+
+    @Override
+    public int updateBoard(SqlSession session, Map map) {
+        int cnt = session.update("board.updateBoard", map);
+        session.commit();
+        return cnt;
+    }
 }

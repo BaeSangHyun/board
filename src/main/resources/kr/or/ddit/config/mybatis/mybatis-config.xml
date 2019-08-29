@@ -23,5 +23,6 @@
     <mappers>
         <mapper resource="kr/or/ddit/config/mybatis/mapper/user.xml"/>
         <mapper resource="kr/or/ddit/config/mybatis/mapper/board.xml"/>
+        <mapper resource="kr/or/ddit/config/mybatis/mapper/post.xml"/>
     </mappers>
 </configuration>
