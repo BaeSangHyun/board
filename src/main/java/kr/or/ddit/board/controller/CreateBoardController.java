@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,20 +30,28 @@ public class CreateBoardController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        String boardNm = request.getParameter("boardNm");
-        String useable = request.getParameter("useable");
-        User user = (User) request.getSession().getAttribute("user");
-        logger.debug("boardNm : {}, {}, {}", boardNm, useable, user.getUserid());
+        HttpSession session = request.getSession();
+        User chkUser = (User) session.getAttribute("user");
 
-        Map map = new HashMap();
-        map.put("boardNm", boardNm);
-        map.put("useable", useable);
-        map.put("userId", user.getUserid());
+        if(chkUser == null) {
+            request.getRequestDispatcher("/jsp/login/login.jsp").forward(request, response);
+        } else {
 
-        service.insertBoard(map);
+            String boardNm = request.getParameter("boardNm");
+            String useable = request.getParameter("useable");
+            User user = (User) request.getSession().getAttribute("user");
+            logger.debug("boardNm : {}, {}, {}", boardNm, useable, user.getUserid());
+
+            Map map = new HashMap();
+            map.put("boardNm", boardNm);
+            map.put("useable", useable);
+            map.put("userId", user.getUserid());
+
+            service.insertBoard(map);
 
 //        request.getRequestDispatcher("/jsp/board/boardManage.jsp").forward(request, response);
-        response.sendRedirect(request.getContextPath() + "/boardManage");
+            response.sendRedirect(request.getContextPath() + "/boardManage");
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

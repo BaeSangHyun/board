@@ -10,7 +10,10 @@
     <select id="getAllPost" parameterType="hashmap" resultType="hashmap">
         select a.*
         from(select rownum rn , a.*
-            from( select postid, pa_postid, title, level, userId, reg_date
+            from( select postid, pa_postid, level, userId, reg_date,
+                case able when 'T' then title
+                          when 'F' then '삭제된 게시글(댓글) 입니다'
+                end as title
                 from post
                 where boardid = #{boardId}
                 start with pa_postid is null
@@ -51,5 +54,50 @@
         insert into post_com values
         ( POST_COM_SEQ.NEXTVAL, #{postId}, #{userId}, sysdate, 'T', #{cont})
     </insert>
+
+    <insert id="newPost" parameterType="hashMap">
+        <selectKey keyProperty="postId" resultType="int" order="AFTER">
+            select POST_SEQ.CURRVAL from dual
+        </selectKey>
+        insert into post values
+        (POST_SEQ.NEXTVAL,
+        #{boardId},
+        #{pa_postId, jdbcType=INTEGER},
+        #{title},
+        #{userId},
+        sysdate,
+        'T',
+        #{cont},
+        nvl(#{postGn, jdbcType=INTEGER},POST_SEQ.CURRVAL))
+    </insert>
+
+    <insert id="newFile" parameterType="hashMap">
+        insert into post_file values
+        (POST_FILE_SEQ.NEXTVAL, #{postId}, #{fileName}, #{path})
+    </insert>
+
+    <delete id="delPostFile" parameterType="int">
+        delete from post_file
+        where postId = #{postId}
+    </delete>
+
+    <delete id="delFile" parameterType="int">
+        delete from post_file
+        where fileId = #{fileId}
+    </delete>
+
+    <delete id="delPost" parameterType="int">
+        update post set able = 'F' where postId = #{postId}
+    </delete>
+
+    <delete id="delPostCom" parameterType="int">
+        delete from post_com
+        where postId = #{postId}
+    </delete>
+
+    <update id="updatePost" parameterType="hashmap">
+        update post set title = #{title}, cont = #{cont} where postId = #{postId}
+    </update>
+
 
 </mapper>

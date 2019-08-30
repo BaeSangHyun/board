@@ -15,4 +15,14 @@ public interface IPostService {
     public List<Map> getPostFile(int postId);
 
     public int regCom(Map map);
+
+    public int createForm(Map data);
+
+    public int setFile(Map fileMap);
+
+    public int delPost(int postId);
+
+    public int delFile(int fileId);
+
+    public int updatePost(Map data);
 }

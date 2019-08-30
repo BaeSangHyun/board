@@ -54,6 +54,7 @@
 
 <body>
 <form action="${cp}/postDetail" method="get" id="frm">
+    <input type="hidden" id="boardId" name="boardId" value="${param.boardId}">
     <input type="hidden" id="postId" name="postId">
 </form>
 
@@ -99,7 +100,7 @@
                 </div>
 
                 <%--게시글 등록 버튼--%>
-                <a href="${cp}/createPost" class="btn btn-default pull-right">게시글 등록</a>
+                <a href="${cp}/postForm?boardId=${param.boardId}" class="btn btn-default pull-right">게시글 등록</a>
 
                 <div class="text-center">
                     <ul class="pagination">
@@ -111,8 +112,23 @@
                             </c:when>
                             <c:otherwise>
                                 <li>
-                                    <a href="${cp}/post?page=${pageNum-1}" aria-label="Previous">
+                                    <a href="${cp}/post?page=1" aria-label="Previous">
                                         <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <c:choose>
+                            <c:when test="${pageNum==1}">
+                                <li class="disabled">
+                                    <span aria-hidden="true">&lt;</span>
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li>
+                                    <a href="${cp}/post?page=${pageNum-1}" aria-label="Previous">
+                                        <span aria-hidden="true">&lt;</span>
                                     </a>
                                 </li>
                             </c:otherwise>
@@ -135,12 +151,27 @@
                         <c:choose>
                             <c:when test="${pageNum==paginationSize}">
                                 <li class="disabled">
-                                    <span aria-hidden="true">&raquo;</span>
+                                    <span aria-hidden="true">&gt;</span>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li>
                                     <a href="${cp}/post?page=${pageNum+1}" aria-label="Next">
+                                        <span aria-hidden="true">&gt;</span>
+                                    </a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <c:choose>
+                            <c:when test="${pageNum==paginationSize}">
+                                <li class="disabled">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li>
+                                    <a href="${cp}/post?page=${paginationSize}" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>

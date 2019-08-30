@@ -20,7 +20,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">${user.usernm}</a></li>
-                <li><a href="#">로그아웃</a></li>
+                <li><a href="${cp}/logout">로그아웃</a></li>
             </ul>
         </div>
     </div>

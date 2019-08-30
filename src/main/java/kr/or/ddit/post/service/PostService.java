@@ -71,4 +71,42 @@ public class PostService implements IPostService {
         session.close();
         return cnt;
     }
+
+    @Override
+    public int createForm(Map data) {
+        SqlSession session = MybatisUtil.getSession();
+        int cnt = dao.createForm(session, data);
+        session.close();
+        return cnt;
+    }
+
+    @Override
+    public int setFile(Map fileMap) {
+        SqlSession session = MybatisUtil.getSession();
+        int cnt = dao.setFile(session, fileMap);
+        session.close();
+        return cnt;
+    }
+
+    @Override
+    public int delPost(int postId) {
+        SqlSession session = MybatisUtil.getSession();
+        int cnt = dao.delPost(session, postId);
+        session.close();
+        return cnt;
+    }
+
+    @Override
+    public int delFile(int fileId) {
+        SqlSession session = MybatisUtil.getSession();
+        int delCnt = dao.delFile(session, fileId);
+        return delCnt;
+    }
+
+    @Override
+    public int updatePost(Map data) {
+        SqlSession session = MybatisUtil.getSession();
+        int upCnt = dao.updatePost(session, data);
+        return upCnt;
+    }
 }

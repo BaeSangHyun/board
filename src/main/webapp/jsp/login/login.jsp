@@ -45,9 +45,9 @@
         <input type="password" id="pass" name="pass"
                class="form-control" placeholder="Password" required> <!-- value="brown1234" -->
         <div class="checkbox">
-            <label>
+            <%--<label>
                 <input id="rememberMe" name="rememberMe" type="checkbox" value="remember-me"> Remember me
-            </label>
+            </label>--%>
         </div>
         <button id="signinBtn" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
     </form>

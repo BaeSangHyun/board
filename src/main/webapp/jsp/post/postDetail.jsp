@@ -57,6 +57,7 @@
                             code += '<label id="post_com" class="control-label">' + v.CONT + ' [ ' + v.USERID + ' / ' + v.REG_DATE +' ]</label><br>'
                         });
                         $('#commentList').html(code);
+                        $('#cont').val('');
                     }, error : function (xhr) {
                         alert("상태 : " + xhr.status)
                     }
@@ -95,30 +96,36 @@
             <br>
 
             <div class="form-group">
-                <label for="post_file" class="col-sm-1 control-label">내용</label>
-                <div class="col-sm-6">
+                <label for="post_file" class="col-sm-10 control-label">내용</label>
+                <div class="col-sm-10">
                     <label id="post_file" class="control-label">${post.CONT}</label>
                 </div>
             </div>
             <br>
 
             <div class="form-group">
-                <label for="post_cont" class="col-sm-1 control-label">첨부파일</label>
-                <div id="fileList" class="col-sm-2 btnLine">
+                <label for="post_cont" class="col-sm-10 control-label">첨부파일</label>
+                <div id="fileList" class="col-sm-10 btnLine">
                     <c:forEach items="${postFile}" var="file">
-                        <label id="post_cont" class="control-label">${file.FILENM}</label><br>
+<%--                        <label id="post_cont" class="control-label">${file.FILENM}</label><br>--%>
+                        <a href="${file.REALFILEPATH}" download="${file.FILENM}">${file.FILENM}<br>
                     </c:forEach>
                 </div>
                 <div class="col-sm-4 btnLine">
-                    <button type="button" class="modify btn btn-success">수정</button>
+                    <%--<button type="button" class="modify btn btn-success">수정</button>
                     <button type="button" class="modify btn btn-success">삭제</button>
-                    <button type="button" class="modify btn btn-success">답글</button>
+                    <button type="button" class="modify btn btn-success">답글</button>--%>
+                    <c:if test="${post.USERID==user.userid}">
+                        <a href="${cp}/postForm?boardId=${param.boardId}&postId=${param.postId}" class="modify btn btn-success pull-right">수정</a>
+                        <a href="${cp}/delPost?boardId=${param.boardId}&postId=${param.postId}" class="modify btn btn-success pull-right">삭제</a>
+                    </c:if>
+                    <a href="${cp}/postForm?boardId=${param.boardId}&parentId=${param.postId}" class="modify btn btn-success pull-right">답글</a>
                 </div>
             </div>
             <br><br><br>
 
             <div class="form-group">
-                <label for="post_com" class="col-sm-1 control-label">댓글</label>
+                <label for="post_com" class="col-sm-10 control-label">댓글</label>
                 <div id="commentList" class="col-sm-10">
                     <c:forEach items="${postCom}" var="com">
                         <label id="post_com" class="control-label">${com.CONT} [ ${com.USERID} / ${com.REG_DATE} ]</label><br>
