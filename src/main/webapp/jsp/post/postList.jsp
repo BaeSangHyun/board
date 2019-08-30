@@ -87,7 +87,7 @@
                         </thead>
                         <tbody>
                         <c:forEach items="${allPost}" var="post">
-                            <tr class="postData" data-postId="${post.POSTID}">
+                        <tr <c:if test="${post.ABLE=='T'}">class="postData"</c:if> data-postId="${post.POSTID}">
                                 <td class="boardNum">${post.POSTID}</td>
                                 <td><c:forEach var="i" begin="1" end="${post.LEVEL-1}">&nbsp;&nbsp;&nbsp;</c:forEach>
                                         <c:if test="${post.LEVEL > 1}">└ </c:if> ${post.TITLE}</td>

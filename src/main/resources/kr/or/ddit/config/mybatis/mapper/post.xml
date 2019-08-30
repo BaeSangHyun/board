@@ -10,7 +10,7 @@
     <select id="getAllPost" parameterType="hashmap" resultType="hashmap">
         select a.*
         from(select rownum rn , a.*
-            from( select postid, pa_postid, level, userId, reg_date,
+            from( select postid, pa_postid, level, userId, reg_date, able,
                 case able when 'T' then title
                           when 'F' then '삭제된 게시글(댓글) 입니다'
                 end as title
