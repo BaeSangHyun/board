@@ -108,7 +108,8 @@
                 <div id="fileList" class="col-sm-10 btnLine">
                     <c:forEach items="${postFile}" var="file">
 <%--                        <label id="post_cont" class="control-label">${file.FILENM}</label><br>--%>
-                        <a href="${file.REALFILEPATH}" download="${file.FILENM}">${file.FILENM}<br>
+<%--                        <a href="${cp}/download?path=${file.REALFILEPATH}" download="${file.FILENM}">${file.FILENM}<br>--%>
+                        <a href="${cp}/download?filename=${file.FILENM}&path=${file.REALFILEPATH}">${file.FILENM}<br>
                     </c:forEach>
                 </div>
                 <div class="col-sm-4 btnLine">
