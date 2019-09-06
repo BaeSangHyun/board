@@ -20,9 +20,13 @@ public interface IPostService {
 
     public int setFile(Map fileMap);
 
-    public int delPost(int postId);
+    public int delPost(Map data);
 
     public int delFile(int fileId);
 
     public int updatePost(Map data);
+
+    public String getFilePath(int fileId);
+
+    public int delCom(int comId);
 }

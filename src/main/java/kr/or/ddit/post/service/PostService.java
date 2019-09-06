@@ -89,9 +89,9 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public int delPost(int postId) {
+    public int delPost(Map data) {
         SqlSession session = MybatisUtil.getSession();
-        int cnt = dao.delPost(session, postId);
+        int cnt = dao.delPost(session, data);
         session.close();
         return cnt;
     }
@@ -108,5 +108,19 @@ public class PostService implements IPostService {
         SqlSession session = MybatisUtil.getSession();
         int upCnt = dao.updatePost(session, data);
         return upCnt;
+    }
+
+    @Override
+    public String getFilePath(int fileId) {
+        SqlSession session = MybatisUtil.getSession();
+        String filePath = dao.getFilePath(session, fileId);
+        return filePath;
+    }
+
+    @Override
+    public int delCom(int comId) {
+        SqlSession session = MybatisUtil.getSession();
+        int i = dao.delCom(session, comId);
+        return i;
     }
 }

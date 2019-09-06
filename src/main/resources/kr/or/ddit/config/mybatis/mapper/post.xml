@@ -12,7 +12,7 @@
         from(select rownum rn , a.*
             from( select postid, pa_postid, level, userId, reg_date, able,
                 case able when 'T' then title
-                          when 'F' then '삭제된 게시글(댓글) 입니다'
+                          when 'F' then '삭제된 게시글 입니다'
                 end as title
                 from post
                 where boardid = #{boardId}
@@ -36,8 +36,11 @@
         where postid = #{postId}
     </select>
 
-    <select id="getPostCom" parameterType="int" resultType="hashmap" resultMap="data" >
-        select *
+    <select id="getPostCom" parameterType="int" resultType="hashmap">
+        select commid, postid, userid, reg_date, able,
+            case able when 'T' then cont
+                      when 'F' then to_clob('삭제된 댓글 입니다')
+            end as CONT
         from post_com
         where postid = #{postId}
         order by commid
@@ -86,8 +89,8 @@
         where fileId = #{fileId}
     </delete>
 
-    <delete id="delPost" parameterType="int">
-        update post set able = 'F' where postId = #{postId}
+    <delete id="delPost" parameterType="hashmap">
+        update post set able = 'F' where postId = #{postId} and userId = #{userId}
     </delete>
 
     <delete id="delPostCom" parameterType="int">
@@ -99,5 +102,14 @@
         update post set title = #{title}, cont = #{cont} where postId = #{postId}
     </update>
 
+    <select id="getFilePath" parameterType="int" resultType="String">
+        select realfilepath
+        from post_file
+        where fileId = #{fileId}
+    </select>
+
+    <delete id="delCom" parameterType="int">
+        update post_com set able = 'F' where commid = #{comId}
+    </delete>
 
 </mapper>

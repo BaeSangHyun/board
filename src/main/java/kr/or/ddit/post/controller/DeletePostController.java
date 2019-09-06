@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/delPost")
 public class DeletePostController extends HttpServlet {
@@ -31,7 +33,11 @@ public class DeletePostController extends HttpServlet {
             String boardId = request.getParameter("boardId");
             int postId = Integer.parseInt(request.getParameter("postId"));
 
-            int cnt = postService.delPost(postId);
+            Map data = new HashMap();
+            data.put("postId", postId);
+            data.put("userId", chkUser.getUserid());
+
+            int cnt = postService.delPost(data);
             response.sendRedirect(request.getContextPath() + "/post?boardId=" + boardId);
         }
     }

@@ -24,9 +24,13 @@ public interface IPostDao {
 
     public int setFile(SqlSession session, Map fileMap);
 
-    public int delPost(SqlSession session, int postId);
+    public int delPost(SqlSession session, Map data);
 
     public int delFile(SqlSession session, int fileId);
 
     public int updatePost(SqlSession session, Map data);
+
+    public String getFilePath(SqlSession session, int fileId);
+
+    public int delCom(SqlSession session, int comId);
 }

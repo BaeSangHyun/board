@@ -65,10 +65,10 @@ public class PostDao implements IPostDao {
     }
 
     @Override
-    public int delPost(SqlSession session, int postId) {
+    public int delPost(SqlSession session, Map data) {
 //        int fileDel = session.delete("post.delPostFile", postId);
 //        int comDel = session.delete("post.delPostCom", postId);
-        int postDel = session.update("post.delPost", postId);
+        int postDel = session.update("post.delPost", data);
         session.commit();
         return postDel;
     }
@@ -85,6 +85,19 @@ public class PostDao implements IPostDao {
         int upCnt = session.update("post.updatePost", data);
         session.commit();
         return upCnt;
+    }
+
+    @Override
+    public String getFilePath(SqlSession session, int fileId) {
+        String filePath = session.selectOne("post.getFilePath", fileId);
+        return filePath;
+    }
+
+    @Override
+    public int delCom(SqlSession session, int comId) {
+        int update = session.update("post.delCom", comId);
+        session.commit();
+        return update;
     }
 
 }

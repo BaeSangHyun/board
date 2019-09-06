@@ -54,7 +54,12 @@
                     success : function (data) {
                         var code = "";
                         $.each(data, function (i, v) {
-                            code += '<label id="post_com" class="control-label">' + v.CONT + ' [ ' + v.USERID + ' / ' + v.REG_DATE +' ]</label><br>'
+                            code += '<span onclick="delCom(' + v.COMMID + ')" class="glyphicon glyphicon-remove del"></span>';
+                            if(v.ABLE == 'T') {
+                                code += '<label id="post_com' + v.COMMID + '" class="control-label">' + v.CONT + ' [ ' + v.USERID + ' / ' + v.REG_DATE +' ]</label><br>';
+                            } else if (v.ABLE == 'F') {
+                                code += '<label id="post_com' + v.COMMID + '" class="control-label">' + v.CONT + '</label><br>';
+                            }
                         });
                         $('#commentList').html(code);
                         $('#cont').val('');
@@ -64,6 +69,20 @@
                 })
             });
         });
+
+        function delCom(idx) {
+            $.ajax({
+                url : '/delCom',
+                type : 'post',
+                data : {'comId' : idx},
+                success : function (data) {
+                    alert("삭제 성공");
+                    $('#post_com' + idx).html('삭제된 댓글 입니다');
+                }, error : function (xhr) {
+                    alert("상태 : " + xhr.status);
+                }
+            })
+        }
     </script>
 </head>
 
@@ -109,7 +128,9 @@
                     <c:forEach items="${postFile}" var="file">
 <%--                        <label id="post_cont" class="control-label">${file.FILENM}</label><br>--%>
 <%--                        <a href="${cp}/download?path=${file.REALFILEPATH}" download="${file.FILENM}">${file.FILENM}<br>--%>
-                        <a href="${cp}/download?filename=${file.FILENM}&path=${file.REALFILEPATH}">${file.FILENM}<br>
+<%--                        <a href="${cp}/download?filename=${file.FILENM}&path=${file.REALFILEPATH}">${file.FILENM}<br>--%>
+<%--                        <a href="${cp}/download?filename=${file.FILENM}&path=${file.REALFILEPATH}" download="${file.FILENM}">${file.FILENM}<br>--%>
+                        <a href="${cp}/download?fileId=${file.FILEID}" download="${file.FILENM}">${file.FILENM}<br>
                     </c:forEach>
                 </div>
                 <div class="col-sm-4 btnLine">
@@ -129,7 +150,17 @@
                 <label for="post_com" class="col-sm-10 control-label">댓글</label>
                 <div id="commentList" class="col-sm-10">
                     <c:forEach items="${postCom}" var="com">
-                        <label id="post_com" class="control-label">${com.CONT} [ ${com.USERID} / ${com.REG_DATE} ]</label><br>
+                        <c:if test="${com.USERID == user.userid}">
+                            <span onclick="delCom(${com.COMMID})" class="glyphicon glyphicon-remove del"></span>
+                        </c:if>
+                        <c:choose>
+                            <c:when test="${com.ABLE == 'T'}">
+                                <label id="post_com${com.COMMID}" class="control-label">${com.CONT} [ ${com.USERID} / ${com.REG_DATE} ]</label><br>
+                            </c:when>
+                            <c:when test="${com.ABLE == 'F'}">
+                                <label id="post_com${com.COMMID}" class="control-label">${com.CONT}</label><br>
+                            </c:when>
+                        </c:choose>
                     </c:forEach>
                 </div>
             </div>
@@ -145,56 +176,6 @@
                 </div>
             </div>
             <br>
-
-       <%-- <div class="row">
-            <div class="col-sm-8 blog-main">
-                <div>
-                    <label>제목</label>
-                    <span >${post.TITLE}</span><br>
-                </div>
-                <div>
-                    <label>제목</label>
-                    <span>${post.CONT}</span><br>
-                </div>
-                <div>
-                    <table border="0">
-                        <tr>
-                            <td>
-                                <label>첨부파일</label>
-                            </td>
-                            <td>
-                                <c:forEach items="${postFile}" var="file">
-                                    <span>${file.FILENM}</span><br>
-                                </c:forEach>
-                            </td>
-                            <td>
-                                <button type="button" class="modify btn btn-success">수정</button>
-                                <button type="button" class="modify btn btn-success">삭제</button>
-                                <button type="button" class="modify btn btn-success">답글</button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div>
-                    <div id="comment" class="comment">
-                        <label>댓글</label>
-                        <div class="comList">
-                            <c:forEach items="${postCom}" var="com">
-                                <div>
-                                    <span>${com.CONT}</span><span>[ ${com.USERID} / ${com.REG_DATE} ]</span>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </div>
-                    <div class="form-group" id="com">
-                        <textarea class="form-control" rows="3" id="cont" name="cont"></textarea>
-                    </div>
-                    <div>
-                        <button id="regCom" type="button" class="modify btn btn-success">댓글 저장</button>
-                    </div>
-                </div>
-            </div>
-        </div>--%>
     </div>
     </div>
 </div>

@@ -1,38 +1,53 @@
 package kr.or.ddit.post.controller;
 
+import kr.or.ddit.post.service.IPostService;
+import kr.or.ddit.post.service.PostService;
+
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 @WebServlet("/download")
 public class FileDownloadController extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/octet-stream");
+    private IPostService postService;
 
-        String filename = request.getParameter("filename");
-        String realPath = request.getParameter("path");
-
-        response.setHeader("Content-Disposition", "attachment;filename=" + filename);
-
-        StringBuffer sb = new StringBuffer(realPath);
-        InputStream in = new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
-        ServletOutputStream out = response.getOutputStream();
-
-        byte[] outputByte = new byte[4096];
-//copy binary contect to output stream
-        while(in.read(outputByte, 0, 4096) != -1)
-        {
-            out.write(outputByte, 0, 4096);
-        }
-        in.close();
-        out.flush();
-        out.close();
-
+    @Override
+    public void init() throws ServletException {
+        postService = PostService.getInstance();
     }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String fileId = request.getParameter("fileId");
+        if (fileId != null) {
+            String filePath = postService.getFilePath(Integer.parseInt(fileId));
+            File imgFile = new File(filePath);
+
+            String mimeType = getServletContext().getMimeType(imgFile.toString());
+            if(mimeType == null)
+            {
+                response.setContentType("application/octet-stream");
+            }
+
+            FileInputStream fileInputStream = new FileInputStream(imgFile);
+            ServletOutputStream servletOutputStream = response.getOutputStream();
+
+            byte b [] = new byte[1024];
+            int data = 0;
+
+            while((data=(fileInputStream.read(b, 0, b.length))) != -1)
+            {
+                servletOutputStream.write(b, 0, data);
+            }
+
+            servletOutputStream.flush();
+            servletOutputStream.close();
+            fileInputStream.close();
+        }
+    }
+
 }

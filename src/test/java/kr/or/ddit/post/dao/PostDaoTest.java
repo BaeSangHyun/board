@@ -1,21 +1,27 @@
-package kr.or.ddit.post.service;
+package kr.or.ddit.post.dao;
 
+import kr.or.ddit.util.MybatisUtil;
+import org.apache.ibatis.session.SqlSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class PostServiceTest {
-    private static final Logger logger = LoggerFactory.getLogger(PostServiceTest.class);
-    private IPostService postService;
+public class PostDaoTest {
+    private SqlSession session;
+    private IPostDao postDao;
+    private static final Logger logger = LoggerFactory.getLogger(PostDaoTest.class);
 
     @Before
-    public void setup() {
-        postService = PostService.getInstance();
+    public void setUp() throws Exception {
+        session = MybatisUtil.getSession();
+        postDao = PostDao.getInstance();
     }
 
     @Test
@@ -27,20 +33,10 @@ public class PostServiceTest {
         map.put("page", 1);
 
         /***When***/
-        List<Map> allPost = postService.getAllPost(map);
+        List<Map> allPost = postDao.getAllPost(session, map);
 
         /***Then***/
         assertEquals(10, allPost.size());
-        for(Map data : allPost) {
-            Set keySet = data.keySet();
-            Iterator iterator = keySet.iterator();
-            System.out.println("key " + keySet + " : ");
-            while (iterator.hasNext()) {
-                System.out.print(data.get(iterator.next().toString()) + " ");
-            }
-            System.out.println();
-        }
-
     }
 
     @Test
@@ -49,7 +45,7 @@ public class PostServiceTest {
         int boardId = 1;
 
         /***When***/
-        int cnt = postService.getCntPost(boardId);
+        int cnt = postDao.getCntPost(session, boardId);
 
         /***Then***/
         assertEquals(27, cnt);
@@ -58,13 +54,13 @@ public class PostServiceTest {
     @Test
     public void getPost() {
         /***Given***/
-        int postId = 3;
+        int postId = 1;
 
         /***When***/
-        Map data = postService.getPost(postId);
+        Map post = postDao.getPost(session, postId);
 
         /***Then***/
-        logger.debug("data : {}, {}",data.get("POSTID"), data.get("TITLE"));
+        logger.debug("data : {}, {}",post.get("POSTID"), post.get("TITLE"));
     }
 
     @Test
@@ -73,11 +69,10 @@ public class PostServiceTest {
         int postId = 1;
 
         /***When***/
-        List<Map> postCom = postService.getPostCom(postId);
+        List<Map> postCom = postDao.getPostCom(session, postId);
 
         /***Then***/
-        assertEquals(7, postCom.size());
-
+        assertEquals(8, postCom.size());
     }
 
     @Test
@@ -86,11 +81,10 @@ public class PostServiceTest {
         int postId = 1;
 
         /***When***/
-        List<Map> postFile = postService.getPostFile(postId);
-
+        List<Map> postFile = postDao.getPostFile(session, postId);
 
         /***Then***/
-        assertEquals(1, postFile.size());
+        assertEquals(3, postFile.size());
 
     }
 
@@ -98,29 +92,28 @@ public class PostServiceTest {
     public void regCom() {
         /***Given***/
         HashMap data = new HashMap();
-        data.put("postId", 1);
+        data.put("postId", 40);
         data.put("userId", "bshn123");
         data.put("cont", "테스트댓글입니다");
 
         /***When***/
-        int i = postService.regCom(data);
+        int i = postDao.regCom(session, data);
 
         /***Then***/
         assertEquals(1, i);
-
     }
 
     @Test
     public void createForm() {
         /***Given***/
         Map map = new HashMap();
-        map.put("boardId", 1);
+        map.put("boardId", 2);
         map.put("title", "Testtitle");
         map.put("userId", "bshn123" );
         map.put("cont", "testCont");
 
         /***When***/
-        int form = postService.createForm(map);
+        int form = postDao.createForm(session, map);
 
         /***Then***/
         assertEquals(1, form);
@@ -130,12 +123,12 @@ public class PostServiceTest {
     public void setFile() {
         /***Given***/
         Map map = new HashMap();
-        map.put("postId", 1);
+        map.put("postId", 46);
         map.put("fileName", "ryan.png");
         map.put("path", "d:\\dev\\upload\\2019\\08\\9427ed80-3894-480a-939e-defww325e9ff78.png");
 
         /***When***/
-        int i = postService.setFile(map);
+        int i = postDao.setFile(session, map);
 
         /***Then***/
         assertEquals(1, i);
@@ -145,11 +138,11 @@ public class PostServiceTest {
     public void delPost() {
         /***Given***/
         Map map = new HashMap();
-        map.put("postId", 50);
+        map.put("postId", 40);
         map.put("userId", "bshn123");
 
         /***When***/
-        int i = postService.delPost(map);
+        int i = postDao.delPost(session, map);
 
         /***Then***/
         assertEquals(1, i);
@@ -158,10 +151,10 @@ public class PostServiceTest {
     @Test
     public void delFile() {
         /***Given***/
-        int fileId = 48;
+        int fileId = 50;
 
         /***When***/
-        int i = postService.delFile(fileId);
+        int i = postDao.delFile(session, fileId);
 
         /***Then***/
         assertEquals(1, i);
@@ -171,12 +164,12 @@ public class PostServiceTest {
     public void updatePost() {
         /***Given***/
         Map map = new HashMap();
-        map.put("title", "제목테스트");
-        map.put("cont", "내용테스트");
+        map.put("title", "다오제목테스트");
+        map.put("cont", "다오내용테스트");
         map.put("postId", 40);
 
         /***When***/
-        int i = postService.updatePost(map);
+        int i = postDao.updatePost(session, map);
 
         /***Then***/
         assertEquals(1, i);
@@ -188,10 +181,10 @@ public class PostServiceTest {
         int fileId = 1;
 
         /***When***/
-        String filePath = postService.getFilePath(fileId);
+        String filePath = postDao.getFilePath(session, fileId);
 
         /***Then***/
-        System.out.println(filePath);
+        logger.debug("filePath : {}", filePath);
         assertEquals("d:\\dev\\upload\\2019\\08\\2b38b216-c1b3-424b-93db-186cdb62810c.png", filePath);
     }
 
@@ -199,10 +192,10 @@ public class PostServiceTest {
     public void delCom() {
         /***Given***/
         int comId = 8;
-
+                
         /***When***/
-        int i = postService.delCom(comId);
-
+        int i = postDao.delCom(session, comId);
+        
         /***Then***/
         assertEquals(1, i);
     }
