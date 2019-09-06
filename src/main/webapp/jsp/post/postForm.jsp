@@ -37,7 +37,7 @@
             nhn.husky.EZCreator.createInIFrame({
                 oAppRef : oEditors, // 전역변수 명과 동일해야 함.
                 elPlaceHolder : "smarteditor", // 에디터가 그려질 textarea ID 값과 동일 해야 함.
-                sSkinURI : "/SE2/SmartEditor2Skin.html", // Editor HTML
+                sSkinURI : "${cp}/SE2/SmartEditor2Skin.html", // Editor HTML
                 fCreator : "createSEditor2", // SE2BasicCreator.js 메소드명이니 변경 금지 X
                 htParams : {
                     // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
